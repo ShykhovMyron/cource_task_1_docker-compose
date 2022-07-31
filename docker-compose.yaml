@@ -1,0 +1,36 @@
+version: "3.3"
+
+services:
+
+  frontend:
+    build: /frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build: /backend
+    restart: always
+    depends_on:
+      - mongo
+    networks:
+      - mongo_backend
+    ports:
+      - "80:80"
+  mongo:
+    image: mongo:5.0.9
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: "course-goals"
+    volumes:
+      - mongo_data:/var/lib/mongo
+    networks:
+      - mongo_backend
+
+volumes:
+  mongo_data:
+
+networks:
+  mongo_backend:
